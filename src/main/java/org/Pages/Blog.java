@@ -17,6 +17,7 @@ public class Blog extends Base {
     protected String classPages = "page-numbers";
     protected String cssSelectorNextButton = ".next.page-numbers";
     protected String cssSelectorCoursesCount = ".col-lg-4.col-md-6";
+    protected String xpathActiveTab = "//*[contains(@class, 'cat-main-wrapper')]//a[contains(@class, 'cat-tab-') and contains(@class, 'active')]";
 
     public List<String[]> getOptions(){
         Select dropDown = new Select(findWithWait(By.cssSelector(cssSelectorCatDrop)));
@@ -29,24 +30,19 @@ public class Blog extends Base {
     }
 
     public String getCategoryName(){
-        return driver.findElement(By.xpath(xpathCategoryName)).getText().trim();
+        return find(By.xpath(xpathCategoryName)).getText().trim();
     }
 
     public List<WebElement> getTabs(){ // get tabs in current category (Articles, Tutorials, etc...)
-        return driver.findElement(By.xpath(xpathLeftTop)).findElement(By.id(idTab)).findElements(By.xpath(".//a"));
+        return find(By.xpath(xpathLeftTop)).findElement(By.id(idTab)).findElements(By.xpath(".//a"));
     }
 
-    public WebElement getActivePane(){ // Active Content Wrapper (Curses tabs, pages)
-        return driver.findElement(By.cssSelector(cssSelectorActivePane));
+    public int getTabsCount(){
+        return getTabs().size();
     }
 
-    public boolean isMoreThenOnePage(WebElement ActivePane){
-        try{
-            return !ActivePane.findElements(By.className(classPages)).isEmpty();
-        }
-        catch (Exception e){
-            return  false;
-        }
+    public WebElement getActivePane(){ // Active Content Wrapper (courses tabs, pages)
+        return find(By.cssSelector(cssSelectorActivePane));
     }
 
     public boolean isNext(WebElement ActivePane){ // Check if next button is exist in current page
@@ -63,7 +59,7 @@ public class Blog extends Base {
         ActivePane.findElement(By.cssSelector(cssSelectorNextButton)).click();
     }
 
-    public int getPageCountOfCurses(WebElement ActivePane){ // Get count of curses in current page (maximum 15 courses in one page)
+    public int getPageCountOfCourses(WebElement ActivePane){ // Get count of courses in current page (maximum 15 courses in one page)
         return ActivePane.findElements(By.cssSelector(cssSelectorCoursesCount)).size();
     }
 
@@ -81,5 +77,9 @@ public class Blog extends Base {
 
     public void nextOption(String url){ // Go to next category
         driver.get(url);
+    }
+
+    public WebElement getActiveTab(){
+        return findWithWait(By.xpath(xpathActiveTab));
     }
 }

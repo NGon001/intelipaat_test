@@ -27,4 +27,12 @@ public class Base {
     protected WebElement findWithWait(By locator){
         return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
     }
+
+    public void click(By locator){
+        find(locator).click();
+    }
+
+    public void input(By locator,String text){
+        find(locator).sendKeys(text);
+    }
 }

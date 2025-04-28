@@ -2,9 +2,15 @@ package Pages;
 
 import org.base.InitTests;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class Blog extends InitTests {
+
+    @BeforeMethod
+    public void openBlogPage(){
+        blog.setupBlogPage();
+    }
 
     //1 test total, 1 min 2 sec
     //===============================================
@@ -29,7 +35,7 @@ public class Blog extends InitTests {
 
                 do {
                     Assert.assertEquals(blog.getCurseCount(tabs.get(i)),expectedCourseCount,"Failed at: " + blogOption[0] + " at tab: " + blog.getTabName(tabs.get(i))); // checks if number of curses changed in tab
-                    actualCount += blog.getPageCountOfCurses(activePane);
+                    actualCount += blog.getPageCountOfCourses(activePane);
                     if (!blog.isNext(activePane)) break; // check if next button is exist, if no, last page, and exit.
                     blog.clickNext(activePane);
                     activePane = blog.getActivePane(); // Refresh reference

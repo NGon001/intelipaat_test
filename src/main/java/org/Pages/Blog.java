@@ -4,11 +4,13 @@ import org.base.Base;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import org.testng.annotations.BeforeMethod;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Blog extends Base {
+    private String BlogUrl = "https://intellipaat.com/blog/ai/";
     protected String cssSelectorCatDrop = "#catdropdown";
     protected String xpathCategoryName = "//*[@id=\"tutorial-single-left\"]/div[2]/h1";
     protected String xpathLeftTop = "//*[@class='cat-left-top']";
@@ -17,7 +19,11 @@ public class Blog extends Base {
     protected String classPages = "page-numbers";
     protected String cssSelectorNextButton = ".next.page-numbers";
     protected String cssSelectorCoursesCount = ".col-lg-4.col-md-6";
-    protected String xpathActiveTab = "//*[contains(@class, 'cat-main-wrapper')]//a[contains(@class, 'cat-tab-') and contains(@class, 'active')]";
+
+
+    public void setupBlogPage() {
+        driver.get(BlogUrl);
+    }
 
     public List<String[]> getOptions(){
         Select dropDown = new Select(findWithWait(By.cssSelector(cssSelectorCatDrop)));
@@ -77,9 +83,5 @@ public class Blog extends Base {
 
     public void nextOption(String url){ // Go to next category
         driver.get(url);
-    }
-
-    public WebElement getActiveTab(){
-        return findWithWait(By.xpath(xpathActiveTab));
     }
 }

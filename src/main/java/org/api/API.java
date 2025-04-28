@@ -11,6 +11,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 
 public class API {
@@ -66,6 +67,32 @@ public class API {
         JsonObject obj = gson.fromJson(json, JsonObject.class); // parsing
 
         return obj.get("result").getAsBoolean(); // getting ""result":true" from json
+    }
+
+    public boolean login(String email, String password) throws IOException, InterruptedException {
+        // Body data with correct password and email
+        Map<String, String> formData = Map.of(
+                "lwa", "1",
+                "log", email,
+                "pwd", password,
+                "lwa_profile_link", "https://intellipaat.com",
+                "login-with-ajax", "login",
+                "redirect_to", "https://intellipaat.com/?loggedin"
+        );
+
+        // Encode the form data
+        String encodedForm = encodeFormData(formData);
+
+        Map<String, String> headers = new HashMap<>();
+
+        headers.put("Content-Type","application/x-www-form-urlencoded; charset=UTF-8"); // header for req
+
+        var response = postReq(loginUrl,encodedForm,headers);
+
+        var response_body = response.body(); // getting response body for finding result
+        System.out.println(response.body());
+
+        return getResult(response_body);
     }
 
 }

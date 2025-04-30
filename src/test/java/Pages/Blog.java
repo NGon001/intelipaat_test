@@ -1,6 +1,7 @@
 package Pages;
 
 import org.base.InitTests;
+import org.openqa.selenium.JavascriptExecutor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -19,37 +20,50 @@ public class Blog extends InitTests {
     //===============================================
     @Test
     public void testBlogsCourseCount_UI() {
+        String methodName = new Object(){}.getClass().getEnclosingMethod().getName();
 
-        var blogOptions = blog.getOptions(); // Get all blog options: Python, Web, etc.
-        for (String[] blogOption : blogOptions) {
-            blog.nextOption(blogOption[1]); // Go to next option
+        ((JavascriptExecutor) driver).executeScript("sauce:job-name=" + methodName);
+        ((JavascriptExecutor) driver).executeScript("sauce:job-build=_" + methodName + "_Build_2025_04_29");
 
-            var tabs = blog.getTabs(); // Get tabs like Articles, Tutorials, etc.
-            int tabCount = tabs.size(); // How many tabs in this category
+        try {
+            var blogOptions = blog.getOptions(); // Get all blog options: Python, Web, etc.
+            for (String[] blogOption : blogOptions) {
+                blog.nextOption(blogOption[1]); // Go to next option
 
-            for (int i = 0; i < tabCount; i++) {
-                var activePane = blog.getActivePane(); // .tab-pane.active — get active content
+                var tabs = blog.getTabs(); // Get tabs like Articles, Tutorials, etc.
+                int tabCount = tabs.size(); // How many tabs in this category
 
-                int actualCount = 0; // How many really courses it is
-                int expectedCourseCount = blog.getCurseCount(tabs.get(i)); // How many courses should be on active tab
+                for (int i = 0; i < tabCount; i++) {
+                    var activePane = blog.getActivePane(); // .tab-pane.active — get active content
 
-                do {
-                    Assert.assertEquals(blog.getCurseCount(tabs.get(i)),expectedCourseCount,"Failed at: " + blogOption[0] + " at tab: " + blog.getTabName(tabs.get(i))); // checks if number of curses changed in tab
-                    actualCount += blog.getPageCountOfCourses(activePane);
-                    if (!blog.isNext(activePane)) break; // check if next button is exist, if no, last page, and exit.
-                    blog.clickNext(activePane);
-                    activePane = blog.getActivePane(); // Refresh reference
-                    tabs = blog.getTabs(); // Update tabs due to possible DOM change
-                }while (true);
+                    int actualCount = 0; // How many really courses it is
+                    int expectedCourseCount = blog.getCurseCount(tabs.get(i)); // How many courses should be on active tab
 
-                Assert.assertEquals(actualCount, expectedCourseCount,"Failed at: " + blogOption[0] + " at tab: " + blog.getTabName(tabs.get(i))); // check if expected course count is the same as actual course count;
+                    do {
+                        Assert.assertEquals(blog.getCurseCount(tabs.get(i)), expectedCourseCount, "Failed at: " + blogOption[0] + " at tab: " + blog.getTabName(tabs.get(i))); // checks if number of curses changed in tab
+                        actualCount += blog.getPageCountOfCourses(activePane);
+                        if (!blog.isNext(activePane))
+                            break; // check if next button is exist, if no, last page, and exit.
+                        blog.clickNext(activePane);
+                        activePane = blog.getActivePane(); // Refresh reference
+                        tabs = blog.getTabs(); // Update tabs due to possible DOM change
+                    } while (true);
 
 
-                if ((tabCount - 1) > i) {
-                    blog.clickNextTab(tabs.get(i + 1)); // Click on next tab (Articles, Tutorials, etc..)
-                    tabs = blog.getTabs(); // Re-fetch after tab change
+                    Assert.assertEquals(actualCount, expectedCourseCount, "Failed at: " + blogOption[0] + " at tab: " + blog.getTabName(tabs.get(i))); // check if expected course count is the same as actual course count;
+
+
+                    if ((tabCount - 1) > i) {
+                        blog.clickNextTab(tabs.get(i + 1)); // Click on next tab (Articles, Tutorials, etc..)
+                        tabs = blog.getTabs(); // Re-fetch after tab change
+                    }
                 }
             }
+            ((JavascriptExecutor) driver).executeScript("sauce:job-result=" + "passed");
+        }catch (AssertionError e){
+            ((JavascriptExecutor) driver).executeScript("sauce:job-result=" + "failed");
+            throw e;
         }
+
     }
 }

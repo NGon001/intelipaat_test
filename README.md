@@ -1,6 +1,6 @@
 # 🧪 Intellipaat QA Automation Tests
 
-This project demonstrates a basic QA automation test framework in Java using **TestNG**, **Selenium**, with both **API testing** and **UI testing** examples for the [Intellipaat](https://intellipaat.com) website.
+This project demonstrates a basic QA automation test framework in Java using **TestNG**, **Selenium**, with both **API testing** and **UI testing** examples for the [Intellipaat](https://intellipaat.com) website. [Bug report](https://docs.google.com/document/d/1klm0EeJ2uhAAFSk0leF6QJtsLw22r85GXBqUiGUPcLA/edit?usp=drive_link)
 
 ---
 
